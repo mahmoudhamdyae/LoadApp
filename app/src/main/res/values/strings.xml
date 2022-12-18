@@ -11,4 +11,7 @@
     <string name="button_name">Click me</string>
     <string name="button_loading">We are loading </string>
     <string name="title_activity_detail">DetailActivity</string>
+
+    <!-- Content Descriptions -->
+    <string name="fab_content_description">E-mail</string>
 </resources>

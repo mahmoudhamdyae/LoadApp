@@ -19,15 +19,11 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
-
     init {
-
     }
-
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -42,5 +38,4 @@ class LoadingButton @JvmOverloads constructor(
         heightSize = h
         setMeasuredDimension(w, h)
     }
-
 }
