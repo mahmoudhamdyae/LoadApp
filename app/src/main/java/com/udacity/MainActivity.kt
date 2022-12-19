@@ -9,17 +9,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import com.udacity.util.cancelNotifications
 import com.udacity.util.sendNotification
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+
+enum class RadioGroupSelect { GLIDE, Repository, Retrofit }
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,14 +37,23 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
+        var radioGroupSelect : RadioGroupSelect = RadioGroupSelect.GLIDE
+        radio_group.setOnCheckedChangeListener { _: RadioGroup, i: Int ->
+            radioGroupSelect = when (i) {
+                R.id.glide_radio_button -> RadioGroupSelect.GLIDE
+                R.id.current_repository_radio_button -> RadioGroupSelect.Repository
+                else -> RadioGroupSelect.Retrofit
+            }
+        }
+
         custom_button.setOnClickListener {
-            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, radioGroupSelect.toString(), Toast.LENGTH_SHORT).show()
             val notificationManager = ContextCompat.getSystemService(
                 application,
                 NotificationManager::class.java
             ) as NotificationManager
             notificationManager.sendNotification(application.getString(R.string.notification_description), application)
-//            download()
+            download(radioGroupSelect)
         }
 
         createChannel(
@@ -58,18 +68,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun download() {
-        val request =
-            DownloadManager.Request(Uri.parse(URL))
-                .setTitle(getString(R.string.app_name))
-                .setDescription(getString(R.string.app_description))
-                .setRequiresCharging(false)
-                .setAllowedOverMetered(true)
-                .setAllowedOverRoaming(true)
-
-        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-        downloadID =
-            downloadManager.enqueue(request) // Enqueue puts the download request in the queue.
+    private fun download(radioGroupSelect: RadioGroupSelect) {
+//        val request =
+//            DownloadManager.Request(Uri.parse(URL))
+//                .setTitle(getString(R.string.app_name))
+//                .setDescription(getString(R.string.app_description))
+//                .setRequiresCharging(false)
+//                .setAllowedOverMetered(true)
+//                .setAllowedOverRoaming(true)
+//
+//        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+//        downloadID =
+//            downloadManager.enqueue(request) // Enqueue puts the download request in the queue.
     }
 
     companion object {
