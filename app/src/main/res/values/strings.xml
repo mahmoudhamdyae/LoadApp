@@ -28,6 +28,10 @@
     <string name="status_label">Status:</string>
     <string name="ok_button">OK</string>
 
+    <!-- Shared Preferences -->
+    <string name="key1">key1</string>
+    <string name="key2">key2</string>
+
     <!-- Content Descriptions -->
     <string name="fab_content_description">E-mail</string>
     <string name="image_view_content_description">Content Description</string>
