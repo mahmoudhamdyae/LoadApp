@@ -2,7 +2,6 @@ package com.udacity
 
 import android.app.NotificationManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.udacity.util.cancelNotifications

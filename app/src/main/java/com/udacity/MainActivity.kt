@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.widget.RadioGroup
@@ -20,9 +21,11 @@ import com.udacity.util.sendNotification
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
-enum class RadioGroupSelect { GLIDE, Repository, Retrofit }
+enum class RadioGroupSelect { GLIDE, REPOSITORY, RETROFIT, NOACTION }
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var radioGroupSelect: RadioGroupSelect
 
     private var downloadID: Long = 0
 
@@ -37,23 +40,23 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        var radioGroupSelect : RadioGroupSelect = RadioGroupSelect.GLIDE
+        radioGroupSelect = RadioGroupSelect.NOACTION
         radio_group.setOnCheckedChangeListener { _: RadioGroup, i: Int ->
             radioGroupSelect = when (i) {
                 R.id.glide_radio_button -> RadioGroupSelect.GLIDE
-                R.id.current_repository_radio_button -> RadioGroupSelect.Repository
-                else -> RadioGroupSelect.Retrofit
+                R.id.current_repository_radio_button -> RadioGroupSelect.REPOSITORY
+                else -> RadioGroupSelect.RETROFIT
             }
         }
 
         custom_button.setOnClickListener {
-            Toast.makeText(this, radioGroupSelect.toString(), Toast.LENGTH_SHORT).show()
-            val notificationManager = ContextCompat.getSystemService(
-                application,
-                NotificationManager::class.java
-            ) as NotificationManager
-            notificationManager.sendNotification(application.getString(R.string.notification_description), application)
-            download(radioGroupSelect)
+            if (radioGroupSelect == RadioGroupSelect.NOACTION) {
+                Toast.makeText(this, getString(R.string.select_one_toast), Toast.LENGTH_SHORT).show()
+            } else {
+                // Test Notification
+                createNotification()
+                download()
+            }
         }
 
         createChannel(
@@ -68,26 +71,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun download(radioGroupSelect: RadioGroupSelect) {
-//        val request =
-//            DownloadManager.Request(Uri.parse(URL))
-//                .setTitle(getString(R.string.app_name))
-//                .setDescription(getString(R.string.app_description))
-//                .setRequiresCharging(false)
-//                .setAllowedOverMetered(true)
-//                .setAllowedOverRoaming(true)
-//
-//        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-//        downloadID =
-//            downloadManager.enqueue(request) // Enqueue puts the download request in the queue.
-    }
-
     companion object {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
     }
 
+    // Download
+    private fun download() {
+        val request =
+            DownloadManager.Request(Uri.parse(URL))
+                .setTitle(getString(R.string.app_name))
+                .setDescription(getString(R.string.app_description))
+                .setRequiresCharging(false)
+                .setAllowedOverMetered(true)
+                .setAllowedOverRoaming(true)
+
+        val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        downloadID =
+            downloadManager.enqueue(request) // Enqueue puts the download request in the queue.
+        Toast.makeText(this, downloadID.toString(), Toast.LENGTH_SHORT).show()
+    }
+
+    // Create Notification Channel
     private fun createChannel(channelId: String, channelName: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -109,5 +115,14 @@ class MainActivity : AppCompatActivity() {
             notificationManager?.createNotificationChannel(notificationChannel)
 
         }
+    }
+
+    // Create A Notification
+    private fun createNotification() {
+        val notificationManager = ContextCompat.getSystemService(
+            application,
+            NotificationManager::class.java
+        ) as NotificationManager
+        notificationManager.sendNotification(application.getString(R.string.notification_description), application)
     }
 }
