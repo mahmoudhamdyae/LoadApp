@@ -6,4 +6,8 @@
     <!-- Radio Buttons -->
     <dimen name="radio_buttons_text_size">25sp</dimen>
     <dimen name="radio_buttons_margin">16dp</dimen>
+
+    <!-- Details Activity -->
+    <dimen name="details_text_size">20sp</dimen>
+    <dimen name="details_margin">25dp</dimen>
 </resources>

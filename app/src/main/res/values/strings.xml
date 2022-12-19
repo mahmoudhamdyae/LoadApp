@@ -20,6 +20,11 @@
     <string name="radio_button1_text">Glide - Image Loading Library by BumpTech</string>
     <string name="radio_button2_text">LoadApp - Current Repository by Udacity</string>
     <string name="radio_button3_text">Retrofit - Type-safe HTTP client for Android and Java by Square, Inc</string>
+    
+    <!-- Details Activity -->
+    <string name="file_name_label">File name:</string>
+    <string name="status_label">Status:</string>
+    <string name="ok_button">OK</string>
 
     <!-- Content Descriptions -->
     <string name="fab_content_description">E-mail</string>
