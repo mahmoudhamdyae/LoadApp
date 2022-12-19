@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
-            downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+            downloadManager.enqueue(request) // Enqueue puts the download request in the queue.
     }
 
     companion object {

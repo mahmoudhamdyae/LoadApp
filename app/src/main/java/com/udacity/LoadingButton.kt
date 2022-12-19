@@ -27,8 +27,8 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
-        val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
+        val minWidth: Int = paddingLeft + paddingRight + suggestedMinimumWidth
+        val w: Int = resolveSizeAndState(minWidth, widthMeasureSpec, 1)
         val h: Int = resolveSizeAndState(
             MeasureSpec.getSize(w),
             heightMeasureSpec,
