@@ -1,16 +1,23 @@
 package com.udacity
 
 import android.app.DownloadManager
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import com.udacity.util.cancelNotifications
+import com.udacity.util.sendNotification
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -30,8 +37,19 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
         custom_button.setOnClickListener {
-            download()
+            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show()
+            val notificationManager = ContextCompat.getSystemService(
+                application,
+                NotificationManager::class.java
+            ) as NotificationManager
+            notificationManager.sendNotification(application.getString(R.string.notification_description), application)
+//            download()
         }
+
+        createChannel(
+            getString(R.string.notification_channel_id),
+            getString(R.string.notification_channel_name)
+        )
     }
 
     private val receiver = object : BroadcastReceiver() {
@@ -60,4 +78,26 @@ class MainActivity : AppCompatActivity() {
         private const val CHANNEL_ID = "channelId"
     }
 
+    private fun createChannel(channelId: String, channelName: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                    setShowBadge(false)
+                }
+
+            notificationChannel.enableLights(true)
+            notificationChannel.lightColor = Color.RED
+            notificationChannel.enableVibration(true)
+            notificationChannel.description = getString(R.string.notification_channel_description)
+
+            val notificationManager = getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager?.createNotificationChannel(notificationChannel)
+
+        }
+    }
 }
