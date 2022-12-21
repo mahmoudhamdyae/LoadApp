@@ -20,11 +20,10 @@ class LoadingButton @JvmOverloads constructor(
     private var widthSize = 0
     private var heightSize = 0
 
-//    private var valueAnimator = ValueAnimator()
-//    private var buttonProgress: Float = 0f
+    private var valueAnimator = ValueAnimator()
+    private var buttonProgress: Float = 0f
     private var backgroundButtonColor = 0
     private var circleProgressColor = 0
-    private var textButton = ""
 
     private var oval = RectF(80f, 30f, 200f, 150f)
 
@@ -47,32 +46,28 @@ class LoadingButton @JvmOverloads constructor(
 
             ButtonState.Completed -> {
                 // Cancel animator
-//                valueAnimator.cancel()
+                valueAnimator.cancel()
                 // Update view
-//                invalidate()
-                // Enable button
+                invalidate()
+                // Enable Button
                 isEnabled = true
-                // Reset button state
-                buttonState = ButtonState.Clicked
             }
 
             else -> {
-                // Enable button
+                // Enable Button
                 isEnabled = true
-                return@observable
             }
         }
     }
 
     init {
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
-            textButton = getString(R.styleable.LoadingButton_text).toString()
             backgroundButtonColor =
                 getColor(R.styleable.LoadingButton_backgroundButtonColor, ContextCompat.getColor(context, R.color.colorPrimary))
             circleProgressColor =
                 getColor(R.styleable.LoadingButton_circleProgressColor, ContextCompat.getColor(context, R.color.colorAccent))
         }
-        buttonState = ButtonState.Clicked
+        buttonState = ButtonState.Completed
     }
 
     private val paintBackground = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -88,10 +83,10 @@ class LoadingButton @JvmOverloads constructor(
         color = Color.WHITE
     }
 
-//    private val paintProgress = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-//        style = Paint.Style.FILL
-//        color = circleProgressColor
-//    }
+    private val paintProgress = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = circleProgressColor
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -114,10 +109,6 @@ class LoadingButton @JvmOverloads constructor(
 
                 ButtonState.Completed -> {
                     drawText(canvas, resources.getString(R.string.button_text))
-                }
-
-                else -> {
-                    drawText(canvas, textButton)
                 }
             }
             invalidate()
