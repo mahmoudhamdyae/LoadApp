@@ -85,36 +85,32 @@ class LoadingButton @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas.apply {
-            drawBackground(canvas)
-            when (buttonState) {
-                ButtonState.Loading -> {
-                    drawBackground(canvas, buttonProgress)
-                    drawArc(
-                        oval,
-                        -180f,
-                        buttonProgress * 360,
-                        true,
-                        paintProgress
-                    )
-                    drawText(canvas, resources.getString(R.string.button_loading))
-                }
-
-                ButtonState.Completed -> {
-                    drawText(canvas, resources.getString(R.string.button_text))
-                }
+        drawBackground(canvas)
+        when (buttonState) {
+            ButtonState.Loading -> {
+                drawBackground(canvas, buttonProgress)
+                canvas.drawArc(
+                    oval,
+                    -180f,
+                    buttonProgress * 360,
+                    true,
+                    paintProgress
+                )
+                drawText(canvas, resources.getString(R.string.button_loading))
             }
-            invalidate()
+
+            ButtonState.Completed -> {
+                drawText(canvas, resources.getString(R.string.button_text))
+            }
         }
+        invalidate()
     }
 
     private fun drawBackground(canvas: Canvas, progress: Float? = null) {
-        canvas.apply {
-            if (progress != null) {
-                paintBackground.alpha = 220
-            }
-            drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
+        if (progress != null) {
+            paintBackground.alpha = 220
         }
+        canvas.drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
     }
 
     private fun drawText(canvas: Canvas, text: String) {
