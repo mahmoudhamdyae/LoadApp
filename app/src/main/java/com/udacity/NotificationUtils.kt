@@ -1,12 +1,10 @@
-package com.udacity.util
+package com.udacity
 
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.udacity.DetailActivity
-import com.udacity.R
 
 // Notification ID.
 private const val NOTIFICATION_ID = 0

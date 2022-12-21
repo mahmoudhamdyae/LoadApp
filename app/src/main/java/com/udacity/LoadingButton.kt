@@ -39,12 +39,12 @@ class LoadingButton @JvmOverloads constructor(
                     duration = 5000
                     start()
                 }
-                // Disable button
+                // Disable Button
                 isEnabled = false
             }
 
             ButtonState.Completed -> {
-                // Cancel animator
+                // Cancel Animator
                 valueAnimator.cancel()
                 // Update view
                 invalidate()
@@ -89,7 +89,7 @@ class LoadingButton @JvmOverloads constructor(
             drawBackground(canvas)
             when (buttonState) {
                 ButtonState.Loading -> {
-//                    drawBackground(canvas, buttonProgress)
+                    drawBackground(canvas, buttonProgress)
                     drawArc(
                         oval,
                         -180f,
@@ -109,7 +109,12 @@ class LoadingButton @JvmOverloads constructor(
     }
 
     private fun drawBackground(canvas: Canvas, progress: Float? = null) {
-            canvas.drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
+        canvas.apply {
+            if (progress != null) {
+                paintBackground.alpha = 220
+            }
+            drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
+        }
     }
 
     private fun drawText(canvas: Canvas, text: String) {

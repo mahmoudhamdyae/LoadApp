@@ -58,9 +58,9 @@
         android:layout_margin="20dp"
         app:backgroundButtonColor="@color/colorPrimary"
         app:circleProgressColor="@color/colorAccent"
-        app:text="@string/button_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:text="@string/button_text" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
