@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
             // Checking if the received broadcast is for our enqueued download by matching download id
             if (viewModel.getDownloadId() == id) {
+                custom_button.buttonState = ButtonState.Completed
                 createNotification()
 
                 val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             if (radioGroupSelect == RadioGroupSelect.NOACTION) {
                 Toast.makeText(this, getString(R.string.select_one_toast), Toast.LENGTH_SHORT).show()
             } else {
+                custom_button.buttonState = ButtonState.Loading
                 viewModel.download()
             }
         }
