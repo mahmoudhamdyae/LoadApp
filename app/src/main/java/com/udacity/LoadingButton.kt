@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
-import kotlinx.coroutines.NonCancellable.start
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -30,16 +29,16 @@ class LoadingButton @JvmOverloads constructor(
     var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { _, _, new ->
         when (new) {
             ButtonState.Loading -> {
-//                valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-//                    addUpdateListener {
-//                        buttonProgress = animatedValue as Float
-//                        invalidate()
-//                    }
-//                    repeatCount = ValueAnimator.INFINITE
-//                    repeatMode = ValueAnimator.RESTART
-//                    duration = 5000
-//                    start()
-//                }
+                valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+                    addUpdateListener {
+                        buttonProgress = animatedValue as Float
+                        invalidate()
+                    }
+                    repeatCount = ValueAnimator.INFINITE
+                    repeatMode = ValueAnimator.RESTART
+                    duration = 5000
+                    start()
+                }
                 // Disable button
                 isEnabled = false
             }
@@ -49,11 +48,6 @@ class LoadingButton @JvmOverloads constructor(
                 valueAnimator.cancel()
                 // Update view
                 invalidate()
-                // Enable Button
-                isEnabled = true
-            }
-
-            else -> {
                 // Enable Button
                 isEnabled = true
             }
@@ -92,18 +86,17 @@ class LoadingButton @JvmOverloads constructor(
         super.onDraw(canvas)
 
         canvas.apply {
-            drawBackgroundButton(canvas)
+            drawBackground(canvas)
             when (buttonState) {
                 ButtonState.Loading -> {
-//                    drawBackgroundButton(canvas, buttonProgress)
-//                    drawArc(
-//                        oval,
-//                        -180f,
-//                        buttonProgress * 360,
-//                        true,
-//                        paintProgress
-//                    )
-
+//                    drawBackground(canvas, buttonProgress)
+                    drawArc(
+                        oval,
+                        -180f,
+                        buttonProgress * 360,
+                        true,
+                        paintProgress
+                    )
                     drawText(canvas, resources.getString(R.string.button_loading))
                 }
 
@@ -115,7 +108,7 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    private fun drawBackgroundButton(canvas: Canvas, progress: Float? = null) {
+    private fun drawBackground(canvas: Canvas, progress: Float? = null) {
             canvas.drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
     }
 
@@ -129,7 +122,7 @@ class LoadingButton @JvmOverloads constructor(
         val minWidth: Int = paddingLeft + paddingRight + suggestedMinimumWidth
         val w: Int = resolveSizeAndState(minWidth, widthMeasureSpec, 1)
         val h: Int = resolveSizeAndState(
-            View.MeasureSpec.getSize(w),
+            MeasureSpec.getSize(w),
             heightMeasureSpec,
             0
         )
