@@ -34,12 +34,26 @@ class MainActivity : AppCompatActivity() {
             if (viewModel.getDownloadId() == id) {
                 createNotification()
 
+                val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                val query = DownloadManager.Query()
+                query.setFilterById(id)
+                val cursor = downloadManager.query(query)
+                var status = ""
+                if (cursor.moveToFirst()) {
+                    val index = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                    status =
+                        if (DownloadManager.STATUS_SUCCESSFUL == cursor.getInt(index))
+                            getString(R.string.success)
+                        else
+                            getString(R.string.fail)
+                }
+
                 val sharedPref = application.getSharedPreferences(
                     getString(R.string.key1), Context.MODE_PRIVATE
                 ) ?: return
                 with(sharedPref.edit()) {
                     putString(getString(R.string.key1), radioGroupSelect.toString())
-                    putString(getString(R.string.key2), "Success")
+                    putString(getString(R.string.key2), status)
                     apply()
                 }
             }
@@ -79,8 +93,8 @@ class MainActivity : AppCompatActivity() {
         )
 
         val observer = Observer<Int> {
-            test_text.text = it.toString()
-            determinateBar.progress = it
+//            test_text.text = it.toString()
+//            determinateBar.progress = it
         }
 
         viewModel.progress.observe(this, observer)
