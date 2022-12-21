@@ -6,6 +6,7 @@ import android.graphics.*
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
@@ -18,59 +19,64 @@ class LoadingButton @JvmOverloads constructor(
     private var widthSize = 0
     private var heightSize = 0
 
-    private var valueAnimator = ValueAnimator()
-    private var buttonProgress: Float = 0f
+//    private var valueAnimator = ValueAnimator()
+//    private var buttonProgress: Float = 0f
     private var backgroundButtonColor = 0
     private var circleProgressColor = 0
     private var textButton = ""
 
     private var oval = RectF(80f, 30f, 200f, 150f)
 
-    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { p, old, new ->
-        when (new) {
-            ButtonState.Loading -> {
-                valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
-                    addUpdateListener {
-                        buttonProgress = animatedValue as Float
-                        invalidate()
-                    }
-                    repeatCount = ValueAnimator.INFINITE
-                    repeatMode = ValueAnimator.RESTART
-                    duration = 5000
-                    start()
-                }
-                // Disable button
-                isEnabled = false
-            }
-
-            ButtonState.Completed -> {
-                // Cancel animator
-                valueAnimator.cancel()
-                // Update view
-                invalidate()
-                // Enable button
-                isEnabled = true
-                // Reset button state
-                buttonState = ButtonState.Clicked
-            }
-
-            else -> {
-                // Enable button
-                isEnabled = true
-                return@observable
-            }
-        }
-    }
+//    private var buttonState: ButtonState by Delegates.observable(ButtonState.Completed) { _, _, new ->
+//        when (new) {
+//            ButtonState.Loading -> {
+//                valueAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
+//                    addUpdateListener {
+//                        buttonProgress = animatedValue as Float
+//                        invalidate()
+//                    }
+//                    repeatCount = ValueAnimator.INFINITE
+//                    repeatMode = ValueAnimator.RESTART
+//                    duration = 5000
+//                    start()
+//                }
+//                // Disable button
+//                isEnabled = false
+//            }
+//
+//            ButtonState.Completed -> {
+//                // Cancel animator
+//                valueAnimator.cancel()
+//                // Update view
+//                invalidate()
+//                // Enable button
+//                isEnabled = true
+//                // Reset button state
+//                buttonState = ButtonState.Clicked
+//            }
+//
+//            else -> {
+//                // Enable button
+//                isEnabled = true
+//                return@observable
+//            }
+//        }
+//    }
 
     init {
         context.withStyledAttributes(attrs, R.styleable.LoadingButton) {
-            backgroundButtonColor =
-                getColor(R.styleable.LoadingButton_backgroundButtonColor, Color.GRAY)
-            circleProgressColor =
-                getColor(R.styleable.LoadingButton_circleProgressColor, Color.YELLOW)
             textButton = getString(R.styleable.LoadingButton_text).toString()
+            backgroundButtonColor =
+                getColor(R.styleable.LoadingButton_backgroundButtonColor, ContextCompat.getColor(context, R.color.colorPrimary))
+            circleProgressColor =
+                getColor(R.styleable.LoadingButton_circleProgressColor, ContextCompat.getColor(context, R.color.colorAccent))
         }
-        buttonState = ButtonState.Clicked
+//        buttonState = ButtonState.Clicked
+    }
+
+    private val paintBackground = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        color = backgroundButtonColor
     }
 
     private val paintText = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -81,62 +87,55 @@ class LoadingButton @JvmOverloads constructor(
         color = Color.WHITE
     }
 
-    private val paintBackground = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        color = backgroundButtonColor
-    }
-
     private val paintProgress = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = circleProgressColor
         style = Paint.Style.FILL
+        color = circleProgressColor
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        canvas?.apply {
+        canvas.apply {
             drawBackgroundButton(canvas)
-            when (buttonState) {
-                ButtonState.Loading -> {
-                    drawBackgroundButton(canvas, buttonProgress)
-                    drawArc(
-                        oval,
-                        -180f,
-                        buttonProgress * 360,
-                        true,
-                        paintProgress
-                    )
-
-                    drawTextButton(canvas, resources.getString(R.string.button_loading))
-                }
-
-                ButtonState.Completed -> {
-                    drawTextButton(canvas, resources.getString(R.string.button_text))
-                }
-
-                else -> {
-                    drawTextButton(canvas, textButton)
-                }
-            }
+//            when (buttonState) {
+//                ButtonState.Loading -> {
+//                    drawBackgroundButton(canvas, buttonProgress)
+//                    drawArc(
+//                        oval,
+//                        -180f,
+//                        buttonProgress * 360,
+//                        true,
+//                        paintProgress
+//                    )
+//
+//                    drawText(canvas, resources.getString(R.string.button_loading))
+//                }
+//
+//                ButtonState.Completed -> {
+                    drawText(canvas, resources.getString(R.string.button_text))
+//                }
+//
+//                else -> {
+//                    drawTextButton(canvas, textButton)
+//                }
+//            }
             invalidate()
         }
     }
 
-    private fun drawBackgroundButton(canvas: Canvas?, progress: Float? = null) {
-        canvas?.apply {
-            if (progress != null) {
-                paintBackground.alpha = 220
-            }
-            drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
-        }
+    private fun drawBackgroundButton(canvas: Canvas, progress: Float? = null) {
+//        canvas?.apply {
+//            if (progress != null) {
+//                paintBackground.alpha = 220
+//            }
+            canvas.drawRect(0f, 0f, width.toFloat() * (progress ?: 1f), height.toFloat(), paintBackground)
+//        }
     }
 
-    private fun drawTextButton(canvas: Canvas?, text: String) {
-        canvas?.apply {
-            val posTextX = (width / 2).toFloat()
-            val posTextY = ((height - (paintText.descent() + paintText.ascent())) / 2)
-            drawText(text, posTextX, posTextY, paintText)
-        }
+    private fun drawText(canvas: Canvas, text: String) {
+        val posX = (width / 2).toFloat()
+        val posY = ((height - (paintText.descent() + paintText.ascent())) / 2)
+        canvas.drawText(text, posX, posY, paintText)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
