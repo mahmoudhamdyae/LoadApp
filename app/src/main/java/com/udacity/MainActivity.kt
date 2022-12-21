@@ -102,6 +102,16 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(receiver)
+    }
+
 companion object {
     private const val GLIDE_URL =
         "https://github.com/bumptech/glide/archive/master.zip"
